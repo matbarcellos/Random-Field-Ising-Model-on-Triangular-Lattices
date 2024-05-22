@@ -1,0 +1,33 @@
+# Configurações iniciais
+set terminal pngcairo size 2000,400 enhanced font 'Verdana,10'
+set output 'Entropy.png'
+
+# Ativar multiplot
+set multiplot layout 1,4 title "Gráficos para diferentes temperaturas"
+
+# Configurações comuns a todos os gráficos
+set xlabel "H/J"
+set ylabel "s"
+
+# Primeiro gráfico
+# set title "T = 0.000001"
+# plot "T1.dat" using 1:2 with points linecolor 1 title "T1"
+
+# Segundo gráfico
+set title "T = 0.1"
+plot "T2.dat" using 1:2 with points linecolor 2 title "T2"
+
+# Terceiro gráfico
+set title "T = 0.2"
+plot "T3.dat" using 1:2 with points linecolor 3 title "T3"
+
+# Quarto gráfico
+set title "T = 0.3"
+plot "T4.dat" using 1:2 with points linecolor 4 title "T4"
+
+# Quinto gráfico
+set title "T = 0.5"
+plot "T5.dat" using 1:2 with points linecolor 5 title "T5"
+
+# Desativar multiplot
+unset multiplot

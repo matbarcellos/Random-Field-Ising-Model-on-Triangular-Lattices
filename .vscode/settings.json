@@ -1,0 +1,18 @@
+{
+  "workbench.iconTheme": "material-icon-theme",
+  "workbench.colorTheme": "Default Dark Modern",
+  "editor.rulers": [
+    {
+      "column": 132,
+      "color": "#ff8800"
+    }
+  ],
+  "workbench.sideBar.location": "right",
+  "workbench.colorCustomizations": {
+    "terminal.background": "#300A24"
+  },
+  "fortran.fortls.disabled": true,
+  "C_Cpp.dimInactiveRegions": false,
+  "terminal.integrated.fontSize": 18,
+  "editor.fontSize": 20
+}
