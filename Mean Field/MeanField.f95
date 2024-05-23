@@ -31,6 +31,8 @@ CALL BaseSpins(S, N)
 
 DO WHILE (h <= 7)
 
+   PRINT '(F6.1, A)', H/7*100, '% '
+
     CALL Self_Consistency(S, N, h, J, T, m)
 
     WRITE(1,'(F10.2, F10.2)') h, sum(m)/N
@@ -51,7 +53,7 @@ SUBROUTINE Self_Consistency(S, N, h, J, T, m)
     REAL(8) :: S(N, N**2)
     REAL(8) :: E(2**N), Z
     REAL(8) :: h, J, T
-    REAL(8) :: prec, error, minE, invZ
+    REAL(8) :: prec, error(3), minE, invZ
     REAL(8) :: iter
     REAL(8) :: m(3), mred(3)
 !***********************************************************************
@@ -59,7 +61,7 @@ SUBROUTINE Self_Consistency(S, N, h, J, T, m)
     prec = 1.0e-6
     iter = 0
 
-    DO WHILE (error >= prec .AND. iter <= 10000)
+    DO WHILE ((error(1) >= prec) .AND. (error(2) >= prec) .AND. (error(3) >= prec))
 
       DO i = 1, 2**N
          E(i) = - J*(S(1,i)*S(2,i) + S(2,i)*S(3,i) + S(3,i)*S(1,i)) &
@@ -84,7 +86,9 @@ SUBROUTINE Self_Consistency(S, N, h, J, T, m)
         !print*, mred
         !read(*,*)
 
-      error = MAXVAL(ABS(mred - m))
+      error(1) = ABS(mred(1) - m(1))
+      error(2) = ABS(mred(2) - m(2))
+      error(3) = ABS(mred(3) - m(3))
 
       m = mred
         

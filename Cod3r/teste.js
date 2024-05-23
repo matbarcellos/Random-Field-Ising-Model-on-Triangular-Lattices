@@ -43,7 +43,6 @@
 
 //console.log(vetor[9])
 
-
 // OBJECT
 
 // Em JavaScript um objeto é uma coleção de chave + valor
@@ -61,3 +60,4 @@
 
 //console.log(objeto2)
 
+console.log('Brasil!')
