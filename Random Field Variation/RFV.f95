@@ -1,129 +1,125 @@
-PROGRAM CLUSTER_BIMODAL
+PROGRAM RandomFieldVariation
 
-    USE OMP_LIB
-    IMPLICIT NONE
- 
-    ! DECLARAÇÃO DE VARIÁVEIS
-    INTEGER, PARAMETER :: N = 3
-    INTEGER(4) :: j, ii, ij, il, ik, it
-    REAL(8), ALLOCATABLE :: S(:,:), R(:,:), M(:), Z(:), Energia(:,:), SpinInteraction(:)
-    REAL(8) :: T, H_0
-    CHARACTER(LEN=10) :: filename
-    REAL(8), DIMENSION(5) :: H_values = [0.5D0, 1.0D0, 2.0D0, 3.0D0, 5.0D0]
- 
-    ALLOCATE(S(N, 2**N), R(N, 2**N), M(2**N), Z(2**N), Energia(2**N, 2**N), SpinInteraction(2**N))
- 
-    ! EXECUÇÃO DO CÓDIGO
-    T = 0.00001D0
-    H_0 = 0D0
- 
-    call BaseSpins(S, N)             ! BASE DE SPINS
- 
-    !***********************************************************************
-    DO j = 1, 2**N
-       DO ii = 1, N
- 
-          call rede(N, ii, ij, il, ik) ! ij, il e ik são vizinhos de ii
- 
-          !********************************************
-          !  TESTE DE FUNCIONAMENTO DA SUBROTINA REDE
-          !  print*, ii, ij, il, ik
-          !  read(*,*)
-          !********************************************
- 
-          IF(ij>0)SpinInteraction(j) = SpinInteraction(j) + S(ii, j)*S(ij, j)
-          IF(il>0)SpinInteraction(j) = SpinInteraction(j) + S(ii, j)*S(il, j)
-          IF(ik>0)SpinInteraction(j) = SpinInteraction(j) + S(ii, j)*S(ik, j)
- 
-       END DO
-    END DO
-    !***********************************************************************
- 
-   DO it = 1, 5
+   USE OMP_LIB
 
-      WRITE(filename, "('H_0_',I1,'.dat')") it
-      OPEN(UNIT=it, FILE=filename)
-
-      H_0 = 0.0D0
-
-      DO WHILE (H_0 <= 10)
-        
-         call BaseCampos(R, N, H_0)      
+   IMPLICIT NONE
  
-         call Energy(S, R, N, H_values(it), SpinInteraction, Energia)
-         call PartitionFunction(N, T, Z, Energia)                               
-         call Magnetization(N, S, R, H_values(it), T, Z, Energia, M)                        
+   INTEGER, PARAMETER :: N = 3
+   INTEGER(4) :: j, ii, ij, il, ik, it
+   REAL(8), ALLOCATABLE :: S(:,:), R(:,:), M(:), Z(:), E(:,:), SS(:)
+   REAL(8) :: T, H
+   CHARACTER(LEN=10) :: filename
+   REAL(8), DIMENSION(5) :: H0_values = [0.5D0, 1.0D0, 2.0D0, 3.0D0, 5.0D0]
+ 
+   ALLOCATE(S(N, 2**N), R(N, 2**N), M(2**N), Z(2**N), E(2**N, 2**N), SS(2**N))
+ 
+   T = 0.00001D0
+   H = 0.0D0
+ 
+   CALL SPIN(S, N)  ! Create an array with all spin configurations
+
+   ! Calculates the interaction energy between the lattice spins
+   DO j = 1, 2**N
+      DO ii = 1, N
          
-         WRITE(it, *)  H_0, SUM(M)/(N*(2**N))
-
-         H_0 = H_0 + 0.01D0
+         ! Find the neighbors ij, il, ik of site ii
+         CALL REDE(N, ii, ij, il, ik)
+ 
+         !********************************************
+         !  print*, ii, ij, il, ik
+         !  read(*,*)
+         !********************************************
+ 
+         IF(ij>0)SS(j) = SS(j) + S(ii, j)*S(ij, j)
+         IF(il>0)SS(j) = SS(j) + S(ii, j)*S(il, j)
+         IF(ik>0)SS(j) = SS(j) + S(ii, j)*S(ik, j)
  
       END DO
    END DO
 
-   DEALLOCATE(S, R, M, Z, Energia, SpinInteraction)
+   DO IT = 1, 5
+
+      WRITE(filename, "('H_0_',I1,'.dat')") IT
+      OPEN(UNIT=it, FILE=filename)
+
+      CALL RandomField(R, N, H0_values(IT))
+
+      DO WHILE (H <= 10)    
  
- END PROGRAM CLUSTER_BIMODAL
+         CALL Energy(S, R, N, H, SS, E)
+         CALL PartitionFunction(N, T, Z, E)                               
+         CALL Magnetization(N, S, T, Z, E, M)                        
+         
+         WRITE(IT, *)  H, SUM(M)/(N*(2**N))
+
+         H = H + 0.01D0
  
- SUBROUTINE Energy(S, R, N, H, SpinInteraction, Energia)
+      END DO
+   END DO
+
+   DEALLOCATE(S, R, M, Z, E, SS)
+ 
+ END PROGRAM
+ 
+SUBROUTINE Energy(S, R, N, H, SS, E)
+ 
+   IMPLICIT NONE
+ 
+   INTEGER(4) :: N, i, j
+   REAL(8) :: E(2**N, 2**N), S(N, 2**N), R(N, 2**N), SS(2**N), H
+ 
+   !$OMP PARALLEL DO
+   DO i = 1, 2**N
+ 
+      E(i, :) = SS(:)
+ 
+      DO j = 1, 2**N
+         E(i, j) = E(i, j) - H*SUM(S(:,j)) - SUM(R(:,i)*S(:,j))
+      END DO
+ 
+   END DO
+   !$OMP END PARALLEL DO
+ 
+END SUBROUTINE Energy
+ 
+SUBROUTINE PartitionFunction(N, T, Z, E)
  
     IMPLICIT NONE
  
-    INTEGER(4) :: N, i, j
-    REAL(8) :: Energia(2**N, 2**N), S(N, 2**N), R(N, 2**N), SpinInteraction(2**N), H
- 
-    !$OMP PARALLEL DO
-    DO i = 1, 2**N
- 
-       Energia(i, :) = SpinInteraction(:)
- 
-       DO j = 1, 2**N
-          Energia(i, j) = Energia(i, j) - H*SUM(S(:,j)) - SUM(R(:,i)*S(:,j))
-       END DO
- 
-    END DO
-    !$OMP END PARALLEL DO
- 
- END SUBROUTINE Energy
- 
-SUBROUTINE PartitionFunction(N, T, Z, Energia)
- 
-    IMPLICIT NONE
- 
-    REAL(8) :: Energia(2**N, 2**N), Z(2**N), T
+    REAL(8) :: E(2**N, 2**N), Z(2**N), T
     INTEGER(4) :: N, i
     REAL(8) :: minEnergy
  
     !$OMP PARALLEL DO
     DO i = 1, 2**N
  
-      minEnergy = MINVAL(Energia(i, :))
-      Z(i) = SUM(exp(-(Energia(i, :) - minEnergy) / T))
+      minEnergy = MINVAL(E(i, :))
+      Z(i) = SUM(exp(-(E(i, :) - minEnergy) / T))
  
     END DO
     !$OMP END PARALLEL DO
  
 END SUBROUTINE PartitionFunction
  
-SUBROUTINE Magnetization(N, S, R, H, T, Z, Energia, M)
+SUBROUTINE Magnetization(N, S, T, Z, E, M)
     IMPLICIT NONE
  
     INTEGER(4) :: N, i
-    REAL(8) :: Energia(2**N, 2**N), S(N, 2**N), R(N, 2**N), M(2**N), Z(2**N), H, T
+    REAL(8) :: E(2**N, 2**N), S(N, 2**N), M(2**N), Z(2**N), T
     REAL(8) :: inverse_Z, minEnergy
  
    DO i = 1, 2**N
 
       inverse_Z = 1.D0 / Z(i)
-      minEnergy = MINVAL(Energia(i, :))
+      minEnergy = MINVAL(E(i, :))
  
-      M(i) = inverse_Z * DOT_PRODUCT(exp(-(Energia(i, :) - minEnergy) / T), SUM(S, DIM=1))
+      M(i) = inverse_Z * DOT_PRODUCT(exp(-(E(i, :) - minEnergy) / T), SUM(S, DIM=1))
  
    END DO
  
 END SUBROUTINE Magnetization
 
-SUBROUTINE BaseSpins(S, N)
+SUBROUTINE SPIN(S, N)
  
    IMPLICIT NONE
  
@@ -142,9 +138,9 @@ SUBROUTINE BaseSpins(S, N)
  
    END DO
  
-END SUBROUTINE BaseSpins
+END SUBROUTINE SPIN
  
-SUBROUTINE BaseCampos(R, N, H_0)
+SUBROUTINE RandomField(R, N, H_0)
  
     IMPLICIT NONE
  
@@ -163,9 +159,9 @@ SUBROUTINE BaseCampos(R, N, H_0)
  
     END DO
  
-END SUBROUTINE BaseCampos
+END SUBROUTINE 
  
- subroutine rede(ns, i, j, l, k)
+ subroutine REDE(ns, i, j, l, k)
     !entrada: i sitio ; ns=numero de sitios
     !saída: j, k, l são vizinhos de i
  
