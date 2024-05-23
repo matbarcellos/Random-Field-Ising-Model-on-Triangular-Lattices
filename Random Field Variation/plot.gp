@@ -2,9 +2,9 @@
 set terminal pngcairo enhanced size 800,600
 set output 'combined_plot.png'
 
-set title "Magnetization vs H_0"
-set xlabel "H_0"
-set ylabel "Magnetization"
+set title "M vs H/|J|"
+set xlabel "H/|J|"
+set ylabel "M"
 
 set grid
 set key outside

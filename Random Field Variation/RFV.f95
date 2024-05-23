@@ -5,25 +5,26 @@ PROGRAM RandomFieldVariation
    IMPLICIT NONE
 
    INTEGER, PARAMETER :: N = 3
+   INTEGER, PARAMETER :: dim = 2
    INTEGER(4) :: j, ii, ij, il, ik, it
    REAL(8), ALLOCATABLE :: S(:,:), R(:,:), M(:), Z(:), E(:,:), SS(:)
    REAL(8) :: T, H
    CHARACTER(LEN=10) :: filename
    REAL(8), DIMENSION(5) :: H0_values = [0.5D0, 1.0D0, 2.0D0, 3.0D0, 5.0D0]
 
-   ALLOCATE(S(N, 2**N), R(N, 2**N), M(2**N), Z(2**N), E(2**N, 2**N), SS(2**N))
+   ALLOCATE(S(N, dim**N), R(N, dim**N), M(dim**N), Z(dim**N), E(dim**N, 2**N), SS(2**N))
 
    T = 0.00001D0
    H = 0.0D0
 
-   CALL SPIN(S, N)  ! Create an array with all spin configurations
+   CALL Spin(S, N)  ! Create an array with all spin configurations
 
    ! Calculates the interaction energy between the lattice spins
    DO j = 1, 2**N
       DO ii = 1, N
 
          ! Find the neighbors ij, il, ik of site ii
-         CALL REDE(N, ii, ij, il, ik)
+         CALL Lattice(N, ii, ij, il, ik)
 
          !********************************************
          !  print*, ii, ij, il, ik
@@ -42,15 +43,15 @@ PROGRAM RandomFieldVariation
       WRITE(filename, "('H_0_',I1,'.dat')") IT
       OPEN(UNIT=it, FILE=filename)
 
-      CALL RandomField(R, N, H0_values(IT))
+      CALL RandomField(R, N, dim, H0_values(IT))
 
       H = 0.0D0
 
       DO WHILE (H <= 10)
 
-         CALL Energy(S, R, N, H, SS, E)
-         CALL PartitionFunction(N, T, Z, E)
-         CALL Magnetization(N, S, T, Z, E, M)
+         CALL Energy(S, R, N, dim, H, SS, E)
+         CALL PartitionFunction(N, dim, T, Z, E)
+         CALL Magnetization(N, dim, S, T, Z, E, M)
 
          WRITE(IT, *)  H, SUM(M)/(N*(2**N))
 
@@ -63,15 +64,15 @@ PROGRAM RandomFieldVariation
 
 END PROGRAM
 
-SUBROUTINE Energy(S, R, N, H, SS, E)
+SUBROUTINE Energy(S, R, N, dim, H, SS, E)
 
    IMPLICIT NONE
 
-   INTEGER(4) :: N, i, j
-   REAL(8) :: E(2**N, 2**N), S(N, 2**N), R(N, 2**N), SS(2**N), H
+   INTEGER(4) :: N, dim, i, j
+   REAL(8) :: E(dim**N, 2**N), S(N, 2**N), R(N, dim**N), SS(2**N), H
 
    !$OMP PARALLEL DO
-   DO i = 1, 2**N
+   DO i = 1, dim**N
 
       E(i, :) = SS(:)
 
@@ -84,16 +85,16 @@ SUBROUTINE Energy(S, R, N, H, SS, E)
 
 END SUBROUTINE Energy
 
-SUBROUTINE PartitionFunction(N, T, Z, E)
+SUBROUTINE PartitionFunction(N, dim, T, Z, E)
 
    IMPLICIT NONE
 
-   REAL(8) :: E(2**N, 2**N), Z(2**N), T
-   INTEGER(4) :: N, i
+   REAL(8) :: E(dim**N, 2**N), Z(dim**N), T
+   INTEGER(4) :: N, dim, i
    REAL(8) :: minEnergy
 
    !$OMP PARALLEL DO
-   DO i = 1, 2**N
+   DO i = 1, dim**N
 
       minEnergy = MINVAL(E(i, :))
       Z(i) = SUM(exp(-(E(i, :) - minEnergy) / T))
@@ -103,11 +104,11 @@ SUBROUTINE PartitionFunction(N, T, Z, E)
 
 END SUBROUTINE PartitionFunction
 
-SUBROUTINE Magnetization(N, S, T, Z, E, M)
+SUBROUTINE Magnetization(N, dim, S, T, Z, E, M)
    IMPLICIT NONE
 
-   INTEGER(4) :: N, i
-   REAL(8) :: E(2**N, 2**N), S(N, 2**N), M(2**N), Z(2**N), T
+   INTEGER(4) :: N, dim, i
+   REAL(8) :: E(dim**N, 2**N), S(N, 2**N), M(dim**N), Z(dim**N), T
    REAL(8) :: inverse_Z, minEnergy
 
    DO i = 1, 2**N
@@ -121,7 +122,7 @@ SUBROUTINE Magnetization(N, S, T, Z, E, M)
 
 END
 
-SUBROUTINE SPIN(S, N)
+SUBROUTINE Spin(S, N)
 
    IMPLICIT NONE
 
@@ -142,27 +143,157 @@ SUBROUTINE SPIN(S, N)
 
 END
 
-SUBROUTINE RandomField(R, N, H_0)
+SUBROUTINE RandomField(R, N, dim, H_0)
 
    IMPLICIT NONE
 
-   REAL(8) :: R(N, 2**N), H_0
-   INTEGER(4) :: i, j, N
+   REAL(8) :: R(N, dim**N), H_0
+   INTEGER(4) :: N, dim
 
-   R = H_0
+   IF(dim .EQ. 2) CALL Bimodal(R, N, dim, H_0)
 
-   DO j = 1, 2**N
-
-      DO i = 1, N
-
-         if (btest(j-1,i-1)) R(i,j) = - H_0
-
-      END DO
-
-   END DO
+   IF(dim .EQ. 3) CALL Trimodal(R, N, dim, H_0)
 
 END
-SUBROUTINE REDE(ns, i, j, l, k)
+
+SUBROUTINE Bimodal(R, N, dim, H_0)
+
+   IMPLICIT NONE
+
+   REAL(8) :: R(N, dim**N), H_0
+   INTEGER(4) :: i, j, N, dim
+
+   IF(dim .EQ. 2) THEN
+
+      R = H_0
+
+      DO j = 1, dim**N
+         DO i = 1, N
+            IF (btest(j-1,i-1)) R(i,j) = - H_0
+         END DO
+      END DO
+   END IF
+
+END
+
+SUBROUTINE Trimodal(R, N, dim, H_0)
+
+   IMPLICIT NONE
+
+   REAL(8) :: R(N, dim**N), H_0
+   INTEGER(4) :: j, N, dim
+   INTEGER(4) :: i1, i2, i3, i4, i5, i6, i7, i8, i9, i10, i11, i12, i13, i14, i15
+
+   IF(N .EQ. 3) then
+      j=1
+      DO i1= -1, 1
+         DO i2= -1, 1
+            DO i3= -1, 1
+               R(3,j) = i3*H_0
+               R(2,j) = i2*H_0
+               R(1,j) = i1*H_0
+               j= j+1
+            END DO
+         END DO
+      END DO
+   END IF
+
+   IF(N .EQ. 6) then
+      j=1
+      DO i1= -1, 1
+         DO i2= -1, 1
+            DO i3= -1, 1
+               DO i4 = -1, 1
+                  DO i5 = -1, 1
+                     DO i6 = -1, 1
+                        R(6,j) = i6*H_0
+                        R(5,j) = i5*H_0
+                        R(4,j) = i4*H_0
+                        R(3,j) = i3*H_0
+                        R(2,j) = i2*H_0
+                        R(1,j) = i1*H_0
+                        j= j+1
+                     END DO
+                  END DO
+               END DO
+            END DO
+         END DO
+      END DO
+   END IF
+
+   IF(N .EQ. 9) then
+      j=1
+      DO i1= -1, 1
+         DO i2= -1, 1
+            DO i3= -1, 1
+               DO i4 = -1, 1
+                  DO i5 = -1, 1
+                     DO i6 = -1, 1
+                        DO i7 = -1, 1
+                           DO i8 = -1, 1
+                              DO i9 = -1, 1
+                                 R(9, j) = i9*H_0
+                                 R(8, j) = i8*H_0
+                                 R(7,j) = i7*H_0
+                                 R(6,j) = i6*H_0
+                                 R(5,j) = i5*H_0
+                                 R(4,j) = i4*H_0
+                                 R(3,j) = i3*H_0
+                                 R(2,j) = i2*H_0
+                                 R(1,j) = i1*H_0
+                                 j= j+1
+                              END DO
+                           END DO
+                        END DO
+                     END DO
+                  END DO
+               END DO
+            END DO
+         END DO
+      END DO
+   END IF
+
+   IF(N .EQ. 15) then
+      j=1
+      DO i1= -1, 1
+         DO i2= -1, 1
+            DO i3= -1, 1
+               DO i4 = -1, 1
+                  DO i5 = -1, 1
+                     DO i6 = -1, 1
+                        DO i7 = -1, 1
+                           DO i8 = -1, 1
+                              DO i9 = -1, 1
+                                 R(15, j) = i15*H_0
+                                 R(14, j) = i14*H_0
+                                 R(13, j) = i13*H_0
+                                 R(12, j) = i12*H_0
+                                 R(11, j) = i11*H_0
+                                 R(10, j) = i10*H_0
+                                 R(9, j) = i9*H_0
+                                 R(8, j) = i8*H_0
+                                 R(7,j) = i7*H_0
+                                 R(6,j) = i6*H_0
+                                 R(5,j) = i5*H_0
+                                 R(4,j) = i4*H_0
+                                 R(3,j) = i3*H_0
+                                 R(2,j) = i2*H_0
+                                 R(1,j) = i1*H_0
+                                 j= j+1
+                              END DO
+                           END DO
+                        END DO
+                     END DO
+                  END DO
+               END DO
+            END DO
+         END DO
+      END DO
+   END IF
+
+END
+
+SUBROUTINE Lattice(ns, i, j, l, k)
    !entrada: i sitio ; ns=numero de sitios
    !saída: j, k, l são vizinhos de i
 
@@ -178,11 +309,11 @@ SUBROUTINE REDE(ns, i, j, l, k)
    !            / \
    !           3 - 2
 
-   if (ns.eq.3) then
+   IF (ns .EQ. 3) then
       j=i+1
-      if (i.eq.3) j=1
+      IF (i .EQ. 3) j=1
 
-   end if
+   END IF
 
    !Cluster
    !             1
@@ -192,13 +323,13 @@ SUBROUTINE REDE(ns, i, j, l, k)
    !         5 - 4 - 3
 
 
-   if (ns.eq.6) then
+   IF (ns .EQ. 6) then
       j=i+1
-      if (i.eq.6) j=1
-      if (i.eq.2) k=4
-      if (i.eq.4) k=6
-      if (i.eq.6) k=2
-   end if
+      IF (i .EQ. 6) j=1
+      IF (i .EQ. 2) k=4
+      IF (i .EQ. 4) k=6
+      IF (i .EQ. 6) k=2
+   END IF
 
    !Cluster ns=9
    !             1
@@ -211,47 +342,47 @@ SUBROUTINE REDE(ns, i, j, l, k)
    !            \ /
    !             5
 
-   if (ns.eq.9) then
-      if (i.eq.1) then
+   IF (ns .EQ. 9) then
+      IF (i .EQ. 1) then
          j=2
          k=8
-      end if
+      END IF
 
-      if (i.eq.2) then
+      IF (i .EQ. 2) then
          j=3
          k=9
-      end if
+      END IF
 
-      if (i.eq.3) then
+      IF (i .EQ. 3) then
          j=4
          k=9
-      end if
+      END IF
 
-      if (i.eq.4) then
+      IF (i .EQ. 4) then
          j=6
          k=9
-      end if
+      END IF
 
-      if (i.eq.5) then
+      IF (i .EQ. 5) then
          j=4
          k=6
-      end if
-      if (i.eq.6) then
+      END IF
+      IF (i .EQ. 6) then
          j=7
          k=9
-      end if
-      if (i.eq.7) then
+      END IF
+      IF (i .EQ. 7) then
          j=8
          k=9
-      end if
-      if (i.eq.8) then
+      END IF
+      IF (i .EQ. 8) then
          j=2
          k=9
-      end if
+      END IF
       !           print*, i, j, k
       !           read(*,*)
 
-   end if
+   END IF
 
    ! Cluster com ns=15
    !               1
@@ -264,83 +395,83 @@ SUBROUTINE REDE(ns, i, j, l, k)
    !        / \ / \ / \ / \
    !       11- 12- 13 -14 -15
 
-   if (ns.eq.15) then
+   IF (ns .EQ. 15) then
 
-      if (i.eq.1) then
+      IF (i .EQ. 1) then
          j=9
          k=2
-      end if
+      END IF
 
-      if (i.eq.2) then
+      IF (i .EQ. 2) then
          j=10
          k=3
          l=9
-      end if
+      END IF
 
-      if (i.eq.3) then
+      IF (i .EQ. 3) then
          j=5
          k=4
          l=10
-      end if
+      END IF
 
-      if (i.eq.4) then
+      IF (i .EQ. 4) then
          j=14
          k=5
-      end if
+      END IF
 
-      if (i.eq.5) then
+      IF (i .EQ. 5) then
          j=13
          k=14
          l=6
-      end if
+      END IF
 
-      if (i.eq.6) then
+      IF (i .EQ. 6) then
          j=13
          k=12
          l=7
-      end if
+      END IF
 
-      if (i.eq.7) then
+      IF (i .EQ. 7) then
          j=12
          k=11
-      end if
+      END IF
 
-      if (i.eq.8) then
+      IF (i .EQ. 8) then
          j=7
          k=6
          l=10
-      end if
+      END IF
 
-      if (i.eq.9) then
+      IF (i .EQ. 9) then
          j=8
          k=10
-      end if
+      END IF
 
-      if (i.eq.10) then
+      IF (i .EQ. 10) then
          j=6
          k=5
-      end if
+      END IF
 
-      if (i.eq.11) then
+      IF (i .EQ. 11) then
          j=12
-      end if
+      END IF
 
-      if (i.eq.12) then
+      IF (i .EQ. 12) then
          j=13
-      end if
+      END IF
 
-      if (i.eq.13) then
+      IF (i .EQ. 13) then
          j=14
-      end if
+      END IF
 
-      if (i.eq.14) then
+      IF (i .EQ. 14) then
          j=15
-      end if
+      END IF
 
-      if (i.eq.15) then
+      IF (i .EQ. 15) then
          j=4
-      end if
-   end if
+      END IF
+   END IF
 
 END
 
