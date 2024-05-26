@@ -1,0 +1,54 @@
+\documentclass{standalone}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+\begin{document}
+
+\begin{tikzpicture}
+    \begin{axis}[
+            title={Susceptibilidade Magnética},
+            xlabel={$h/|\mathcal{J}|$},
+            ylabel={$\chi$},
+            width=1\textwidth % Define a largura do gráfico
+        ]
+
+        % First plot
+        \addplot[
+            color=black,
+            %dotted,
+            line width=1pt,
+        ]
+        table[
+                x index=0,
+                y index=1,
+                col sep=space
+            ] {/home/mateus/Code/Fortran/Mean Field/Data/Magnetic Susceptibility/NoRF.dat};
+
+        % Second plot
+        \addplot[
+            color=red,
+            %dotted,
+            line width=1pt,
+        ]
+        table[
+                x index=0,
+                y index=1,
+                col sep=space
+            ] {/home/mateus/Code/Fortran/Mean Field/Data/Magnetic Susceptibility/Bi.dat};
+
+        % Third plot
+        \addplot[
+            color=blue,
+            %dotted,
+            line width=1pt,
+        ]
+        table[
+                x index=0,
+                y index=1,
+                col sep=space
+            ] {/home/mateus/Code/Fortran/Mean Field/Data/Magnetic Susceptibility/Tri.dat};
+
+    \end{axis}
+\end{tikzpicture}
+
+\end{document}

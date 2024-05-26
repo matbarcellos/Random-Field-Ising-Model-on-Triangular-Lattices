@@ -1,10 +1,10 @@
-PWD /home/mateus/Code/Fortran/Mean Field/TiKz/Local Magnetization
+PWD /home/mateus/Code/Fortran/Mean Field/TiKz/Magnetic Susceptibility
 INPUT /etc/texmf/web2c/texmf.cnf
 INPUT /usr/share/texmf/web2c/texmf.cnf
 INPUT /usr/share/texlive/texmf-dist/web2c/texmf.cnf
 INPUT /var/lib/texmf/web2c/pdftex/pdflatex.fmt
-INPUT /home/mateus/Code/Fortran/Mean Field/TiKz/Local Magnetization/LocalMagnetization.tex
-OUTPUT LocalMagnetization.log
+INPUT /home/mateus/Code/Fortran/Mean Field/TiKz/Magnetic Susceptibility/MagneticSusceptibility.tex
+OUTPUT MagneticSusceptibility.log
 INPUT /usr/share/texlive/texmf-dist/tex/latex/standalone/standalone.cls
 INPUT /usr/share/texlive/texmf-dist/tex/latex/standalone/standalone.cls
 INPUT /usr/share/texlive/texmf-dist/tex/latex/standalone/standalone.cls
@@ -430,10 +430,10 @@ INPUT /usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 INPUT /usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 INPUT /usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 INPUT /usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
-INPUT ./LocalMagnetization.aux
-INPUT LocalMagnetization.aux
-INPUT LocalMagnetization.aux
-OUTPUT LocalMagnetization.aux
+INPUT ./MagneticSusceptibility.aux
+INPUT MagneticSusceptibility.aux
+INPUT MagneticSusceptibility.aux
+OUTPUT MagneticSusceptibility.aux
 INPUT /usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 INPUT /usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 INPUT /usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
@@ -453,19 +453,12 @@ INPUT /usr/share/texlive/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
 INPUT /usr/share/texlive/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
 INPUT /usr/share/texlive/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
 INPUT /usr/share/texlive/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
-INPUT /home/mateus/Code/Fortran/Mean Field/Data/Local Magnetization/NoRF.dat
-INPUT /home/mateus/Code/Fortran/Mean Field/Data/Local Magnetization/NoRF.dat
-INPUT /home/mateus/Code/Fortran/Mean Field/Data/Local Magnetization/NoRF.dat
-INPUT /home/mateus/Code/Fortran/Mean Field/Data/Local Magnetization/Bi.dat
-INPUT /home/mateus/Code/Fortran/Mean Field/Data/Local Magnetization/Bi.dat
-INPUT /home/mateus/Code/Fortran/Mean Field/Data/Local Magnetization/Bi.dat
-INPUT /home/mateus/Code/Fortran/Mean Field/Data/Local Magnetization/Tri.dat
-INPUT /home/mateus/Code/Fortran/Mean Field/Data/Local Magnetization/Tri.dat
-INPUT /home/mateus/Code/Fortran/Mean Field/Data/Local Magnetization/Tri.dat
-OUTPUT LocalMagnetization.pdf
+INPUT /home/mateus/Code/Fortran/Mean Field/Data/Magnetic Susceptibility/NoRF.dat
+INPUT /home/mateus/Code/Fortran/Mean Field/Data/Magnetic Susceptibility/Bi.dat
+INPUT /home/mateus/Code/Fortran/Mean Field/Data/Magnetic Susceptibility/Tri.dat
+OUTPUT MagneticSusceptibility.pdf
 INPUT /var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map
-INPUT LocalMagnetization.aux
+INPUT MagneticSusceptibility.aux
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb
-INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb

@@ -1,0 +1,54 @@
+\documentclass{standalone}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+\begin{document}
+
+\begin{tikzpicture}
+    \begin{axis}[
+            title={Entropia},
+            xlabel={$h/|\mathcal{J}|$},
+            ylabel={$\mathcal{S}$},
+            width=1\textwidth % Define a largura do gráfico
+        ]
+
+        % First plot
+        \addplot[
+            color=black,
+            %dotted,
+            line width=1pt,
+        ]
+        table[
+                x index=0,
+                y index=1,
+                col sep=space
+            ] {/home/mateus/Code/Fortran/Mean Field/Data/Entropy/NoRF.dat};
+
+        % Second plot
+        \addplot[
+            color=red,
+            %dotted,
+            line width=1pt,
+        ]
+        table[
+                x index=0,
+                y index=1,
+                col sep=space
+            ] {/home/mateus/Code/Fortran/Mean Field/Data/Entropy/Bi.dat};
+
+        % Third plot
+        \addplot[
+            color=blue,
+            %dotted,
+            line width=1pt,
+        ]
+        table[
+                x index=0,
+                y index=1,
+                col sep=space
+            ] {/home/mateus/Code/Fortran/Mean Field/Data/Entropy/Tri.dat};
+
+    \end{axis}
+\end{tikzpicture}
+
+\end{document}

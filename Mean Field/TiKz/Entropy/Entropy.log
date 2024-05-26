@@ -1,10 +1,10 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2024.5.25)  26 MAY 2024 17:48
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2024.5.25)  26 MAY 2024 17:30
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**"/home/mateus/Code/Fortran/Mean Field/TiKz/Local Magnetization/LocalMagnetization.tex"
-(/home/mateus/Code/Fortran/Mean Field/TiKz/Local Magnetization/LocalMagnetization.tex
+**"/home/mateus/Code/Fortran/Mean Field/TiKz/Entropy/Entropy.tex"
+(/home/mateus/Code/Fortran/Mean Field/TiKz/Entropy/Entropy.tex
 LaTeX2e <2021-11-15> patch level 1
 L3 programming layer <2022-01-21> (/usr/share/texlive/texmf-dist/tex/latex/standalone/standalone.cls
 Document Class: standalone 2018/03/26 v1.3a Class to compile TeX sub-files standalone
@@ -297,8 +297,8 @@ File: pgflibraryplotmarks.code.tex 2021/05/15 v3.1.9a (3.1.9a)
 File: l3backend-pdftex.def 2022-01-12 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count290
 \l__pdf_internal_box=\box63
-) (./LocalMagnetization.aux)
-\openout1 = `LocalMagnetization.aux'.
+) (./Entropy.aux)
+\openout1 = `Entropy.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 5.
 LaTeX Font Info:    ... okay on input line 5.
@@ -335,35 +335,29 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 ))
 Package pgfplots notification 'compat/show suggested version=true': document has been generated with the most recent feature set (\pgfplotsset{compat=1.18}).
 
-PGFPlots: reading {"/home/mateus/Code/Fortran/Mean Field/Data/Local Magnetization/NoRF.dat"}
-PGFPlots: reading {"/home/mateus/Code/Fortran/Mean Field/Data/Local Magnetization/NoRF.dat"}
-PGFPlots: reading {"/home/mateus/Code/Fortran/Mean Field/Data/Local Magnetization/NoRF.dat"}
+PGFPlots: reading {"/home/mateus/Code/Fortran/Mean Field/Data/Entropy/NoRF.dat"}
+PGFPlots: reading {"/home/mateus/Code/Fortran/Mean Field/Data/Entropy/Bi.dat"}
+PGFPlots: reading {"/home/mateus/Code/Fortran/Mean Field/Data/Entropy/Tri.dat"}
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 49.
+(Font)              <7> on input line 51.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 49.
-PGFPlots: reading {"/home/mateus/Code/Fortran/Mean Field/Data/Local Magnetization/Bi.dat"}
-PGFPlots: reading {"/home/mateus/Code/Fortran/Mean Field/Data/Local Magnetization/Bi.dat"}
-PGFPlots: reading {"/home/mateus/Code/Fortran/Mean Field/Data/Local Magnetization/Bi.dat"}
-PGFPlots: reading {"/home/mateus/Code/Fortran/Mean Field/Data/Local Magnetization/Tri.dat"}
-PGFPlots: reading {"/home/mateus/Code/Fortran/Mean Field/Data/Local Magnetization/Tri.dat"}
-PGFPlots: reading {"/home/mateus/Code/Fortran/Mean Field/Data/Local Magnetization/Tri.dat"}
+(Font)              <5> on input line 51.
 [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] (./LocalMagnetization.aux) ) 
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] (./Entropy.aux) ) 
 Here is how much of TeX's memory you used:
- 22696 strings out of 480247
- 608009 string characters out of 5896151
- 1377544 words of memory out of 5000000
- 40305 multiletter control sequences out of 15000+600000
+ 22657 strings out of 480247
+ 607077 string characters out of 5896151
+ 1187632 words of memory out of 5000000
+ 40266 multiletter control sequences out of 15000+600000
  469259 words of font info for 28 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 99i,18n,103p,803b,2081s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on LocalMagnetization.pdf (1 page, 56127 bytes).
+ 99i,10n,103p,780b,1919s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
+Output written on Entropy.pdf (1 page, 39749 bytes).
 PDF statistics:
- 31 PDF objects out of 1000 (max. 8388607)
- 19 compressed objects within 1 object stream
+ 26 PDF objects out of 1000 (max. 8388607)
+ 16 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  13 words of extra memory for PDF output out of 10000 (max. 10000000)
 

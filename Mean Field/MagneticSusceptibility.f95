@@ -1,50 +1,63 @@
-PROGRAM ENTROPY
+PROGRAM MEANFIELD
 
    IMPLICIT NONE
 
    INTEGER(4), PARAMETER :: N = 3, dim = 3
    REAL(8) :: S(N, 2**N), R(N, dim**N)
-   REAL(8) :: h, J, T, h_0
-   REAL(8) :: Entropia(dim**N), E(dim**N, 2**N)
+   REAL(8) :: h, J, T, h_0, dh
+   REAL(8) :: m(N), Md(N), Ml(N), X(N)
    CHARACTER(:), ALLOCATABLE :: filename
 
    J =  -1.00D0
    h =   0.00D0
    T =   0.10D0
    h_0 = 0.50D0
+   dh = 1.0e-4
 
    CALL Spin(S, N)
    CALL RandomField(R, N, dim, h_0)
 
    IF(dim .EQ. 1) THEN
-      filename = '/home/mateus/Code/Fortran/Mean Field/Data/Entropy/NoRF.dat'
+      filename = '/home/mateus/Code/Fortran/Mean Field/Data/Magnetic Susceptibility/NoRF.dat'
       OPEN(UNIT=1, FILE=filename)
    END IF
 
+
    IF(dim .EQ. 2) THEN
-      filename = '/home/mateus/Code/Fortran/Mean Field/Data/Entropy/Bi.dat'
+      filename = '/home/mateus/Code/Fortran/Mean Field/Data/Magnetic Susceptibility/Bi.dat'
       OPEN(UNIT=2, FILE=filename)
    END IF
 
    IF(dim .EQ. 3) THEN
-      filename = '/home/mateus/Code/Fortran/Mean Field/Data/Entropy/Tri.dat'
+      filename = '/home/mateus/Code/Fortran/Mean Field/Data/Magnetic Susceptibility/Tri.dat'
       OPEN(UNIT=3, FILE=filename)
    END IF
 
    DO WHILE (h <= 10)
 
-      PRINT '(F6.1, A)', h/10*100, '% '
+      PRINT '(F6.1, A)', H/10*100, '% '
 
-      CALL SelfConsistency(S, R, N, dim, h, J, T, E)
-      CALL getEntropy(N, dim, T, E, Entropia)
+      h = h + dh
 
-      IF (dim .EQ. 1) WRITE(1, '(F6.4, F8.4)') h, SUM(Entropia)/N
+      CALL getSusceptibility(S, R, N, dim, h, J, T, m)
 
-      IF (dim .EQ. 2) WRITE(2, '(F6.4, F8.4)') h, SUM(Entropia)/N
+      Md = m
 
-      IF (dim .EQ. 3) WRITE(3, '(F6.4, F8.4)') h, SUM(Entropia)/N
+      h = h - dh
 
-      h = h + 0.01
+      CALL getSusceptibility(S, R, N, dim, h, J, T, m)
+
+      Ml = m
+
+      X(:) = (Md(:) - Ml(:))/(2D0*dh)
+
+      IF (dim .EQ. 1) WRITE(1, '(F6.4, 3F8.4)') h, SUM(X)/N
+
+      IF (dim .EQ. 2) WRITE(2, '(F6.4, 3F8.4)') h, SUM(X)/N
+
+      IF (dim .EQ. 3) WRITE(3, '(F6.4, 3F8.4)') h, SUM(X)/N
+
+      h = h + 0.1
 
    END DO
 
@@ -57,14 +70,14 @@ PROGRAM ENTROPY
 END PROGRAM
 
 
-SUBROUTINE SelfConsistency(S, R, N, dim, h, J, T, E)
+SUBROUTINE getSusceptibility(S, R, N, dim, h, J, T, m)
 
    INTEGER(4) :: N, dim
    REAL(8) :: S(N, 2**N), R(N, dim**N)
    REAL(8) :: h, J, T
    REAL(8) :: prec, error
    REAL(8) :: iter
-   REAL(8) :: m(3), m0(3), E(dim**N, 2**N)
+   REAL(8) :: m(3), m0(3)
 
    m(1) =  0.00D0
    m(2) = -1.00D0
@@ -76,7 +89,7 @@ SUBROUTINE SelfConsistency(S, R, N, dim, h, J, T, E)
 
    DO WHILE (error >= prec .AND. iter <= 10000)
 
-      CALL getEnergy(N, dim, S, R, m, H, J, T, m0, E)
+      CALL getMagnetization(N, dim, S, R, m, H, J, T, m0)
 
       error = MAXVAL(ABS(m0 - m))
 
@@ -90,12 +103,12 @@ SUBROUTINE SelfConsistency(S, R, N, dim, h, J, T, E)
 
 END SUBROUTINE
 
-SUBROUTINE getEnergy(N, dim, S, R, m, H, J, T, m0, E)
+SUBROUTINE getMagnetization(N, dim, S, R, m, H, J, T, m0)
 
-   INTEGER(4) :: ii, i, N, dim
+   INTEGER(4) :: ii, i, k, N, dim
    REAL(8) :: S(N,2**N), R(N, dim**N)
    REAL(8) :: E(dim**N, 2**N), Z(dim**N)
-   REAL(8) :: h, T, J
+   REAL(8) :: H, T, J
    REAL(8) :: m(3), X(dim**N, N), m0(3)
 
    DO ii = 1, dim**N
@@ -123,48 +136,6 @@ SUBROUTINE getEnergy(N, dim, S, R, m, H, J, T, m0, E)
    m0(3) = SUM(X(:,3))/(dim**N)
 
 END
-
-SUBROUTINE getEntropy(N, dim, T, E, Entropia)
-
-   INTEGER(4) :: ii, N, dim
-   REAL(8) :: E(dim**N, 2**N), Zh(dim**N), Zl(dim**N)
-   REAL(8) :: Entropia(dim**N), Fh(dim**N), Fl(dim**N)
-   REAL(8) :: prec, T, Tl, Th
-
-   ! MÉTODO DAS DIFERENÇAS FINITAS CENTRADAS PARA O CÁLCULO DA ENTROPIA
-
-   prec = 1.0e-4
-
-   ! CALCULANDO PARA T + h (T superior)
-   Th = T + prec
-
-   DO ii = 1, dim**N
-
-      Zh(ii) = SUM(exp(-(E(ii, :) - MINVAL(E(ii, :)))/Th))
-
-      Fh(ii) = - Th*LOG(Zh(ii))
-
-   END DO
-
-   ! CALCULANDO PARA T - h (T inferior)
-   Tl = T - prec
-
-   DO ii = 1, dim**N
-
-      Zl(ii) = SUM(exp(-(E(ii, :) - MINVAL(E(ii, :)))/Tl))
-
-      Fl(ii) = - Tl*LOG(Zl(ii))
-
-   END DO
-
-   DO ii = 1, dim**N
-
-      Entropia(ii) = - (Fh(ii) - Fl(ii)) / (2.0*prec)
-
-   END DO
-
-END
-
 
 SUBROUTINE Spin(S, N)
 
