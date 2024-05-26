@@ -1,11 +1,11 @@
 # Fdb version 3
-["pdflatex"] 1716688272 "/home/mateus/Code/Fortran/Cluster/Mean Field/TiKz/Local Magnetization/LocalMagnetization.tex" "LocalMagnetization.pdf" "LocalMagnetization" 1716688274
-  "/dev/null" 1716652045 0 d41d8cd98f00b204e9800998ecf8427e ""
+["pdflatex"] 1716741739 "/home/mateus/Code/Fortran/Mean Field/TiKz/Local Magnetization/LocalMagnetization.tex" "LocalMagnetization.pdf" "LocalMagnetization" 1716741741
+  "/dev/null" 1716739474 0 d41d8cd98f00b204e9800998ecf8427e ""
   "/etc/texmf/web2c/texmf.cnf" 1716675009 475 c0e671620eb5563b2130f56340a5fde8 ""
-  "/home/mateus/Code/Fortran/Cluster/Mean Field/Data/Bi.dat" 1716686932 3100 89bf613808f3245391aba4077cab17f7 ""
-  "/home/mateus/Code/Fortran/Cluster/Mean Field/Data/NoRF.dat" 1716685656 31031 7e3b81109558dca1495f5de114d16e5f ""
-  "/home/mateus/Code/Fortran/Cluster/Mean Field/Data/Tri.dat" 1716684351 31031 6f4c1efb99269d5f6ad1a0e9cc2f0ebc ""
-  "/home/mateus/Code/Fortran/Cluster/Mean Field/TiKz/Local Magnetization/LocalMagnetization.tex" 1716688272 3805 dda418ad90058e0ef9bbc3a13677bbc8 ""
+  "/home/mateus/Code/Fortran/Mean Field/Data/Local Magnetization/Bi.dat" 1716686932 3100 89bf613808f3245391aba4077cab17f7 ""
+  "/home/mateus/Code/Fortran/Mean Field/Data/Local Magnetization/NoRF.dat" 1716685656 31031 7e3b81109558dca1495f5de114d16e5f ""
+  "/home/mateus/Code/Fortran/Mean Field/Data/Local Magnetization/Tri.dat" 1716684351 31031 6f4c1efb99269d5f6ad1a0e9cc2f0ebc ""
+  "/home/mateus/Code/Fortran/Mean Field/TiKz/Local Magnetization/LocalMagnetization.tex" 1716741739 3913 921e1045ce244ae52c1a9155c0039a7e ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb" 1248133631 36299 5f9df58c2139e7edcf37c8fca4bd384d ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb" 1248133631 35752 024fb6c41858982481f6968b5fc26508 ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb" 1248133631 32569 5e5ddc8df908dea60932f3c484a54c0d ""
@@ -142,8 +142,8 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1644012257 39432 7155514e09a3d69036fac785183a21c2 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1716675016 128028 f533b797fba58d231669ea19e894e23e ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1716678895 1405650 a4f4f87a36857fc5d3edc5460edf8ee1 ""
-  "LocalMagnetization.aux" 1716688274 32 3985256e7290058c681f74d7a3565a19 "pdflatex"
-  "LocalMagnetization.tex" 1716688272 3805 dda418ad90058e0ef9bbc3a13677bbc8 ""
+  "LocalMagnetization.aux" 1716741741 32 3985256e7290058c681f74d7a3565a19 "pdflatex"
+  "LocalMagnetization.tex" 1716741739 3913 921e1045ce244ae52c1a9155c0039a7e ""
   (generated)
   "LocalMagnetization.aux"
   "LocalMagnetization.log"

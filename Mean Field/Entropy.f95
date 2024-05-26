@@ -1,11 +1,11 @@
-PROGRAM MEANFIELD
+PROGRAM ENTROPY
 
    IMPLICIT NONE
 
    INTEGER(4), PARAMETER :: N = 3, dim = 2
    REAL(8) :: S(N, 2**N), R(N, dim**N)
    REAL(8) :: h, J, T, h_0
-   REAL(8) :: m(N)
+   REAL(8) :: m(N), Entropia(dim**N)
    CHARACTER(:), ALLOCATABLE :: filename
 
    J =  -1.00D0
@@ -31,6 +31,7 @@ PROGRAM MEANFIELD
       PRINT '(F6.1, A)', H/10*100, '% '
 
       CALL SelfConsistency(S, R, N, dim, h, J, T, m)
+      CALL Entropy(S, R, N, dim, h, J, T, m, Entropia)
 
       IF (dim .EQ. 2) WRITE(2, '(F6.4, 3F8.4)') h, m(1)/N, m(2)/N, m(3)/N
 
@@ -82,10 +83,10 @@ END SUBROUTINE
 
 SUBROUTINE Magnetization(N, dim, S, R, m, H, J, T, m0)
 
-   INTEGER(4) :: ii, i, k, N, dim
+   INTEGER(4) :: ii, i, N, dim
    REAL(8) :: S(N,2**N), R(N, dim**N)
    REAL(8) :: E(dim**N, 2**N), Z(dim**N)
-   REAL(8) :: H, T, J
+   REAL(8) :: h, T, J
    REAL(8) :: m(3), X(dim**N, N), m0(3)
 
    DO ii = 1, dim**N
@@ -113,6 +114,58 @@ SUBROUTINE Magnetization(N, dim, S, R, m, H, J, T, m0)
    m0(3) = SUM(X(:,3))/(dim**N)
 
 END
+
+SUBROUTINE Entropy(S, R, N, dim, h, J, T, m, Entropia)
+
+   INTEGER(4) :: ii, i, N, dim
+   REAL(8) :: S(N, 2**N), R(N, dim**N)
+   REAL(8) :: E(dim**N, 2**N), Zh(dim**N), Zl(dim**N)
+   REAL(8) :: Entropia(dim**N), Fh(dim**N), Fl(dim**N)
+   REAL(8) :: h, T, Tl, Th, J
+   REAL(8) :: m(3)
+
+   DO ii = 1, dim**N
+      DO i = 1, 2**N
+         E(ii, i) = - J*(S(1,i)*S(2,i) + S(2,i)*S(3,i) + S(3,i)*S(1,i)) &
+            - h*SUM(S(:,i)) - SUM(R(:,ii)*S(:,i)) &
+            - J*((2*(m(2)+m(3))*S(1, i)) + (2*(m(1)+m(3))*S(2, i)) + (2*(m(1)+m(2))*S(3, i)))
+      END DO
+   END DO
+
+   ! MÉTODO DAS DIFERENÇAS FINITAS CENTRADAS PARA O CÁLCULO DA ENTROPIA
+
+   h = 1.0e-4
+
+   ! CALCULANDO PARA T + h (T superior)
+   Th = T + h
+
+   DO ii = 1, dim**N
+
+      Zh(ii) = SUM(exp(-(E(ii, :) - MINVAL(E(ii, :)))/Th))
+
+      Fh(ii) = - Th*LOG(Zh(ii))
+
+   END DO
+
+   ! CALCULANDO PARA T - h (T inferior)
+   Tl = T - h
+
+   DO ii = 1, dim**N
+
+      Zl(ii) = SUM(exp(-(E(ii, :) - MINVAL(E(ii, :)))/Tl))
+
+      Fl(ii) = - Tl*LOG(Zl(ii))
+
+   END DO
+
+   DO ii = 1, dim**N
+
+      Entropia(ii) = - (Fh(ii) - Fl(ii)) / (2.0*h)
+
+   END DO
+
+END
+
 
 SUBROUTINE Spin(S, N)
 
@@ -284,3 +337,4 @@ SUBROUTINE Trimodal(R, N, dim, h_0)
    END IF
 
 END
+
