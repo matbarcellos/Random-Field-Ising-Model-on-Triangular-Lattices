@@ -453,9 +453,15 @@ INPUT /usr/share/texlive/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
 INPUT /usr/share/texlive/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
 INPUT /usr/share/texlive/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
 INPUT /usr/share/texlive/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+INPUT /home/mateus/Code/Fortran/Cluster/Mean Field/Data/NoRF.dat
+INPUT /home/mateus/Code/Fortran/Cluster/Mean Field/Data/NoRF.dat
+INPUT /home/mateus/Code/Fortran/Cluster/Mean Field/Data/NoRF.dat
 INPUT /home/mateus/Code/Fortran/Cluster/Mean Field/Data/Bi.dat
 INPUT /home/mateus/Code/Fortran/Cluster/Mean Field/Data/Bi.dat
 INPUT /home/mateus/Code/Fortran/Cluster/Mean Field/Data/Bi.dat
+INPUT /home/mateus/Code/Fortran/Cluster/Mean Field/Data/Tri.dat
+INPUT /home/mateus/Code/Fortran/Cluster/Mean Field/Data/Tri.dat
+INPUT /home/mateus/Code/Fortran/Cluster/Mean Field/Data/Tri.dat
 OUTPUT LocalMagnetization.pdf
 INPUT /var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map
 INPUT LocalMagnetization.aux

@@ -2,7 +2,7 @@ PROGRAM MEANFIELD
 
    IMPLICIT NONE
 
-   INTEGER(4), PARAMETER :: N = 3, dim = 3
+   INTEGER(4), PARAMETER :: N = 3, dim = 2
    REAL(8) :: S(N, 2**N), R(N, dim**N)
    REAL(8) :: h, J, T, h_0
    REAL(8) :: m(N)
@@ -26,7 +26,7 @@ PROGRAM MEANFIELD
       OPEN(UNIT=3, FILE=filename)
    END IF
 
-   DO WHILE (h <= 10.0D0)
+   DO WHILE (h <= 10)
 
       PRINT '(F6.1, A)', H/10*100, '% '
 
@@ -36,7 +36,7 @@ PROGRAM MEANFIELD
 
       IF (dim .EQ. 3) WRITE(3, '(F6.4, 3F8.4)') h, m(1)/N, m(2)/N, m(3)/N
 
-      h = h + 0.01D0
+      h = h + 0.1
 
    END DO
 
