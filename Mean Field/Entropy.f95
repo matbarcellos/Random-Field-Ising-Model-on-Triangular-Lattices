@@ -17,12 +17,12 @@ PROGRAM ENTROPY
    CALL RandomField(R, N, dim, h_0)
 
    IF(dim .EQ. 2) THEN
-      filename = '/home/mateus/Code/Fortran/Mean Field/Data/Bi.dat'
+      filename = '/home/mateus/Code/Fortran/Mean Field/Data/Entropy/Bi.dat'
       OPEN(UNIT=2, FILE=filename)
    END IF
 
    IF(dim .EQ. 3) THEN
-      filename = '/home/mateus/Code/Fortran/Mean Field/Data/Tri.dat'
+      filename = '/home/mateus/Code/Fortran/Mean Field/Data/Entropy/Tri.dat'
       OPEN(UNIT=3, FILE=filename)
    END IF
 
@@ -31,7 +31,7 @@ PROGRAM ENTROPY
       PRINT '(F6.1, A)', H/10*100, '% '
 
       CALL SelfConsistency(S, R, N, dim, h, J, T, m)
-      CALL Entropy(S, R, N, dim, h, J, T, m, Entropia)
+      CALL getEntropy(S, R, N, dim, h, J, T, m, Entropia)
 
       IF (dim .EQ. 2) WRITE(2, '(F6.4, 3F8.4)') h, m(1)/N, m(2)/N, m(3)/N
 
@@ -67,7 +67,7 @@ SUBROUTINE SelfConsistency(S, R, N, dim, h, J, T, m)
 
    DO WHILE (error >= prec .AND. iter <= 10000)
 
-      CALL Magnetization(N, dim, S, R, m, H, J, T, m0)
+      CALL getMagnetization(N, dim, S, R, m, H, J, T, m0)
 
       error = MAXVAL(ABS(m0 - m))
 
@@ -81,7 +81,7 @@ SUBROUTINE SelfConsistency(S, R, N, dim, h, J, T, m)
 
 END SUBROUTINE
 
-SUBROUTINE Magnetization(N, dim, S, R, m, H, J, T, m0)
+SUBROUTINE getMagnetization(N, dim, S, R, m, H, J, T, m0)
 
    INTEGER(4) :: ii, i, N, dim
    REAL(8) :: S(N,2**N), R(N, dim**N)
@@ -115,7 +115,7 @@ SUBROUTINE Magnetization(N, dim, S, R, m, H, J, T, m0)
 
 END
 
-SUBROUTINE Entropy(S, R, N, dim, h, J, T, m, Entropia)
+SUBROUTINE getEntropy(S, R, N, dim, h, J, T, m, Entropia)
 
    INTEGER(4) :: ii, i, N, dim
    REAL(8) :: S(N, 2**N), R(N, dim**N)
