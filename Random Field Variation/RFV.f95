@@ -5,12 +5,12 @@ PROGRAM RandomFieldVariation
    IMPLICIT NONE
 
    INTEGER, PARAMETER :: N = 3
-   INTEGER, PARAMETER :: dim = 2
+   INTEGER, PARAMETER :: dim = 3
    INTEGER(4) :: j, ii, ij, il, ik, it
    REAL(8), ALLOCATABLE :: S(:,:), R(:,:), M(:), Z(:), E(:,:), SS(:)
    REAL(8) :: T, H
    CHARACTER(LEN=10) :: filename
-   REAL(8), DIMENSION(5) :: H0_values = [0.5D0, 1.0D0, 2.0D0, 3.0D0, 5.0D0]
+   REAL(8), DIMENSION(6) :: H0_values = [0.00D0, 0.25D0, 0.50D0, 0.75D0, 1.00D0, 1.25D0]
 
    ALLOCATE(S(N, dim**N), R(N, dim**N), M(dim**N), Z(dim**N), E(dim**N, 2**N), SS(2**N))
 
@@ -38,10 +38,17 @@ PROGRAM RandomFieldVariation
       END DO
    END DO
 
-   DO IT = 1, 5
+   DO IT = 1, 6
 
-      WRITE(filename, "('H_0_',I1,'.dat')") IT
-      OPEN(UNIT=it, FILE=filename)
+      IF(dim .EQ. 2) THEN
+         WRITE(filename, "('Bi',I1,'.dat')") IT
+         OPEN(UNIT=it, FILE=filename)
+      END IF
+
+      IF(dim .EQ. 3) THEN
+         WRITE(filename, "('Tri',I1,'.dat')") IT
+         OPEN(UNIT=it, FILE=filename)
+      END IF
 
       CALL RandomField(R, N, dim, H0_values(IT))
 
@@ -53,7 +60,7 @@ PROGRAM RandomFieldVariation
          CALL PartitionFunction(N, dim, T, Z, E)
          CALL Magnetization(N, dim, S, T, Z, E, M)
 
-         WRITE(IT, *)  H, SUM(M)/(N*(2**N))
+         WRITE(IT, *)  H, SUM(M)/(N*(dim**N))
 
          H = H + 0.01D0
 
@@ -111,7 +118,7 @@ SUBROUTINE Magnetization(N, dim, S, T, Z, E, M)
    REAL(8) :: E(dim**N, 2**N), S(N, 2**N), M(dim**N), Z(dim**N), T
    REAL(8) :: inverse_Z, minEnergy
 
-   DO i = 1, 2**N
+   DO i = 1, dim**N
 
       inverse_Z = 1.D0 / Z(i)
       minEnergy = MINVAL(E(i, :))

@@ -1,0 +1,56 @@
+\documentclass{standalone}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+\begin{document}
+
+\begin{tikzpicture}
+    \begin{axis}[
+            title={Bimodal},
+            xlabel={h/$|\mathcal{J}|$},
+            ylabel={$\mathcal{M}$},
+            legend pos=outer north east,
+            grid=major
+        ]
+        % First plot
+        \addplot[
+            color=blue,
+            mark=square,
+        ]
+        table[
+                x index=0,
+                y index=1,
+                col sep=space
+            ] {/home/mateus/Code/Fortran/Cluster/Mean Field/Data/Bi.dat};
+        \addlegendentry{Plot 1}
+
+        % Second plot
+        \addplot[
+            color=red,
+            mark=triangle,
+        ]
+        table[
+                x index=0,
+                y index=2,
+                col sep=space
+            ] {/home/mateus/Code/Fortran/Cluster/Mean Field/Data/Bi.dat};
+        \addlegendentry{Plot 2}
+
+        % Third plot
+        \addplot[
+            color=green,
+            mark=o,
+        ]
+        table[
+                x index=0,
+                y index=3,
+                col sep=space
+            ] {/home/mateus/Code/Fortran/Cluster/Mean Field/Data/Bi.dat};
+        \addlegendentry{Plot 3}
+
+
+
+    \end{axis}
+\end{tikzpicture}
+
+\end{document}
