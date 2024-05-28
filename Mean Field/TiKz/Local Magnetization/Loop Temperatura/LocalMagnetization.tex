@@ -1,0 +1,154 @@
+\documentclass{standalone}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+\begin{document}
+
+\begin{tikzpicture}
+    \begin{axis}[
+            title={$h/|\mathcal{J}| = 0$ e $h_{0}/|\mathcal{J}| = 0$},
+            xlabel={$T/|\mathcal{J}|$},
+            ylabel={$\mathcal{M}$},
+            width=0.5\textwidth % Define a largura do gráfico
+        ]
+        % First plot
+        \addplot[
+            color=black,
+            dotted,
+            line width=2pt,
+        ]
+        table[
+                x index=0,
+                y index=1,
+                col sep=space
+            ] {/home/mateus/Code/Fortran/Mean Field/Data/Local Magnetization/Loop Temperature/NoRF.dat};
+
+        % Second plot
+        \addplot[
+            color=blue,
+            dotted,
+            line width=2pt,
+        ]
+        table[
+                x index=0,
+                y index=2,
+                col sep=space
+            ] {/home/mateus/Code/Fortran/Mean Field/Data/Local Magnetization/Loop Temperature/NoRF.dat};
+        % Third plot
+        \addplot[
+            color=red,
+            dotted,
+            line width=2pt,
+        ]
+        table[
+                x index=0,
+                y index=3,
+                col sep=space
+            ] {/home/mateus/Code/Fortran/Mean Field/Data/Local Magnetization/Loop Temperature/NoRF.dat};
+
+    \end{axis}
+\end{tikzpicture}
+
+\hspace{1cm} % Espaçamento horizontal entre os gráficos
+
+\begin{tikzpicture}
+    \begin{axis}[
+            title={$h/|\mathcal{J}| = 3$ e $h_{0}/|\mathcal{J}| = 0$},
+            xlabel={$T/|\mathcal{J}|$},
+            ylabel={$\mathcal{M}$},
+            width=0.5\textwidth % Define a largura do gráfico
+        ]
+        % First plot
+        \addplot[
+            color=black,
+            dotted,
+            line width=2pt,
+        ]
+        table[
+                x index=0,
+                y index=1,
+                col sep=space
+            ] {/home/mateus/Code/Fortran/Mean Field/Data/Local Magnetization/Loop Temperature/H_NoRF.dat};
+
+        % Second plot
+        \addplot[
+            color=blue,
+            dotted,
+            line width=2pt,
+        ]
+        table[
+                x index=0,
+                y index=2,
+                col sep=space
+            ] {/home/mateus/Code/Fortran/Mean Field/Data/Local Magnetization/Loop Temperature/H_NoRF.dat};
+        % Third plot
+        \addplot[
+            color=red,
+            dotted,
+            line width=2pt,
+        ]
+        table[
+                x index=0,
+                y index=3,
+                col sep=space
+            ] {/home/mateus/Code/Fortran/Mean Field/Data/Local Magnetization/Loop Temperature/H_NoRF.dat};
+
+    \end{axis}
+\end{tikzpicture}
+
+\hspace{1cm} % Espaçamento horizontal entre os gráficos
+
+\begin{tikzpicture}
+    \begin{axis}[
+            title={Bimodal; $h/|\mathcal{J}| = 3$ e $h_{0}/|\mathcal{J}| = 0,5$},
+            xlabel={$T/|\mathcal{J}|$},
+            ylabel={$\mathcal{M}$},
+            legend pos=outer north east,
+            width=0.5\textwidth % Define a largura do gráfico
+        ]
+
+        % First plot
+        \addplot[
+            color=black,
+            dotted,
+            line width=2pt,
+        ]
+        table[
+                x index=0,
+                y index=1,
+                col sep=space
+            ] {/home/mateus/Code/Fortran/Mean Field/Data/Local Magnetization/Loop Temperature/Bi.dat};
+        \addlegendentry{$\mathcal{M}_{1}$}
+
+        % Second plot
+        \addplot[
+            color=blue,
+            dotted,
+            line width=2pt,
+        ]
+        table[
+                x index=0,
+                y index=2,
+                col sep=space
+            ] {/home/mateus/Code/Fortran/Mean Field/Data/Local Magnetization/Loop Temperature/Bi.dat};
+        \addlegendentry{$\mathcal{M}_{2}$}
+
+        % Third plot
+        \addplot[
+            color=red,
+            dotted,
+            line width=2pt,
+        ]
+        table[
+                x index=0,
+                y index=3,
+                col sep=space
+            ] {/home/mateus/Code/Fortran/Mean Field/Data/Local Magnetization/Loop Temperature/Bi.dat};
+        \addlegendentry{$\mathcal{M}_{3}$}
+
+    \end{axis}
+
+\end{tikzpicture}
+
+
+\end{document}

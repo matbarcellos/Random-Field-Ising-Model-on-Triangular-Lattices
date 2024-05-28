@@ -9,7 +9,7 @@ PROGRAM MEANFIELD
    CHARACTER(:), ALLOCATABLE :: filename
 
    J =  -1.00D0
-   h =   0.00D0
+   h =   3.00D0
    T =   0.10D0
    h_0 = 0.50D0
 
@@ -17,34 +17,34 @@ PROGRAM MEANFIELD
    CALL RandomField(R, N, dim, h_0)
 
    IF(dim .EQ. 1) THEN
-      filename = '/home/mateus/Code/Fortran/Mean Field/Data/Local Magnetization/NoRF.dat'
+      filename = '/home/mateus/Code/Fortran/Mean Field/Data/Local Magnetization/Loop Temperature/H_NoRF.dat'
       OPEN(UNIT=1, FILE=filename)
    END IF
 
 
    IF(dim .EQ. 2) THEN
-      filename = '/home/mateus/Code/Fortran/Mean Field/Data/Local Magnetization/Bi.dat'
+      filename = '/home/mateus/Code/Fortran/Mean Field/Data/Local Magnetization/Loop Temperature/Bi.dat'
       OPEN(UNIT=2, FILE=filename)
    END IF
 
    IF(dim .EQ. 3) THEN
-      filename = '/home/mateus/Code/Fortran/Mean Field/Data/Local Magnetization/Tri.dat'
+      filename = '/home/mateus/Code/Fortran/Mean Field/Data/Local Magnetization/Loop Temperature/Tri.dat'
       OPEN(UNIT=3, FILE=filename)
    END IF
 
-   DO WHILE (h <= 10)
+   DO WHILE (T <= 10)
 
-      PRINT '(F6.1, A)', H/10*100, '% '
+      PRINT '(F6.1, A)', T/10*100, '% '
 
       CALL SelfConsistency(S, R, N, dim, h, J, T, m)
 
-      IF (dim .EQ. 1) WRITE(1, '(F6.4, 3F8.4)') h, m(1)/N, m(2)/N, m(3)/N
+      IF (dim .EQ. 1) WRITE(1, '(F6.4, 3F8.4)') T, m(1)/N, m(2)/N, m(3)/N
 
-      IF (dim .EQ. 2) WRITE(2, '(F6.4, 3F8.4)') h, m(1)/N, m(2)/N, m(3)/N
+      IF (dim .EQ. 2) WRITE(2, '(F6.4, 3F8.4)') T, m(1)/N, m(2)/N, m(3)/N
 
-      IF (dim .EQ. 3) WRITE(3, '(F6.4, 3F8.4)') h, m(1)/N, m(2)/N, m(3)/N
+      IF (dim .EQ. 3) WRITE(3, '(F6.4, 3F8.4)') T, m(1)/N, m(2)/N, m(3)/N
 
-      h = h + 0.1
+      T = T + 0.1
 
    END DO
 
